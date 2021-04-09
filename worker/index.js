@@ -13,7 +13,16 @@ function fib(index) {
   return fib(index - 1) + fib(index - 2);
 }
 
+function isNumeric(value) {
+  return /^-?\d+$/.test(value);
+}
+
 sub.on('message', (channel, message) => {
-  redisClient.hset('values', message, fib(parseInt(message)));
+  if (isNumeric(message)) {
+    let fibValue = fib(parseInt(message));
+    console.log(`I got ${message} Worker calculated ${fibValue}`)
+    redisClient.hset('values', message, fibValue);
+  }
+  
 });
 sub.subscribe('insert');
