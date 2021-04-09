@@ -19,11 +19,11 @@ const pgClient = new Pool({
   port: keys.pgPort,
 });
 
-pgClient.on('connect', () => {
-  pgClient
-    .query('CREATE TABLE IF NOT EXISTS values (number INT)')
-    .catch((err) => console.log(err));
-});
+pgClient.on('connect', client => {
+  client
+      .query('CREATE TABLE IF NOT EXISTS values (number INT)')
+      .catch(err => console.error(err));
+})
 
 // Redis Client Setup
 const redis = require('redis');
@@ -52,8 +52,16 @@ app.get('/values/current', async (req, res) => {
   });
 });
 
+function isNumeric(value) {
+  return /^-?\d+$/.test(value);
+}
+
 app.post('/values', async (req, res) => {
   const index = req.body.index;
+
+  if (!isNumeric(index)) {
+    return res.status(422).send('Index has not numeric value');
+  }
 
   if (parseInt(index) > 40) {
     return res.status(422).send('Index too high');
