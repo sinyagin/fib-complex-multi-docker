@@ -1,0 +1,16 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t andreysinyagin/fib-client-test -f ./client/Dockerfile.dev
+
+script:
+  - docker run -e CI=true andreysinyagin/fib-client-test npm test
+
+after-success:
+  - docker build -t andreysinyagin/fib-client ./client
+  - docker build -t andreysinyagin/fib-nginx ./nginx
+  - docker build -t andreysinyagin/fib-server ./server
+  - docker build -t andreysinyagin/fib-worker ./worker
