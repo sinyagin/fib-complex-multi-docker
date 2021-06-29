@@ -20,4 +20,5 @@ Main objective is to get more experience with a multi container deployment.</p>
 
 #### Available deployment configs
 
-
+ - aws branch - configs to deploy it to AWS
+ - k8s, main branches - configs to run in Kubernetes Cluster locally and deploy to the Google Cloud
